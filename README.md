@@ -4,6 +4,10 @@ This repository contains the python script and executable program for visualizat
 
 In order to see the code go to the "CODE" folder and you will be able so the see it with its requirements, in other hand if you just want to run the program just download the entire "Executable program" folder and run the Blastviewer.exe application.  
 
+Once you run the code or the program you will see the main window of the program as follows:
+
+
+
 Single Charge main features:
 * One blast per time at the center of grid/map (0, 0) by default
 * Up to 5 receivers with X and Y coordinates for each receiver
