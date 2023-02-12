@@ -2,6 +2,8 @@
 
 This repository contains the python script and executable program for visualization and estimation of the overpressure and vibration levels of a single blasting charge.
 
+In order to see the code go to the "CODE" folder and you will be able so the see it with its requirements, in other hand if you just want to run the program just download the entire "Executable program" folder and run the Blastviewer.exe application.  
+
 Single Charge main features:
 * One blast per time at the center of grid/map (0, 0) by default
 * Up to 5 receivers with X and Y coordinates for each receiver
