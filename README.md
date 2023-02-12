@@ -25,7 +25,7 @@ For more info on how to use the app just read the [Quick manual](https://github.
 Blast viewer BETA is a tool whose purpose is to graphically and visually estimate the Overpressure and Ground Vibration values produced by a blast. By using the models and formulas proposed by the Australian standard AS2187-2, compiled from USBM RI8505 and USBM RI8507 respectively.
 The software in a unified version of the algorithm of the thesis "Algoritmo para la generación de mapa grillado de ruido y vibración para explosiones utilizando la norma australiana AS 2187.2". For more information on the theory, references and realization of the algorithm, consult the following link:
 
-*https://www.researchgate.net/publication/361115853_Algoritmo_para_la_generacion_de_mapa_de_rejilla_de_ruido_y_vibraciones_para_explosiones_using_la_norma_australiana_AS_21872
+* https://www.researchgate.net/publication/361115853_Algoritmo_para_la_generacion_de_mapa_de_rejilla_de_ruido_y_vibraciones_para_explosiones_using_la_norma_australiana_AS_21872
 
 
 _For further information contact: janorios.matias@gmail.com_
