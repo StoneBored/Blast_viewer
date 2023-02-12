@@ -1,6 +1,6 @@
-## Blasting Air Overpressure and Ground Vibration Mapping
+## Airblast Overpressure and Ground Vibration Mapping
 
-This repository contains 4 Scripts for visualization and estimation of the Pressure and Vibration levels of a single or multiple blasting charges.
+This repository contains the python script and executable program for visualization and estimation of the overpressure and vibration levels of a single blasting charge.
 
 Single Charge main features:
 * One blast per time at the center of grid/map (0, 0) by default
