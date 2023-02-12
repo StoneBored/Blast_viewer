@@ -1,3 +1,7 @@
+import customtkinter
+customtkinter.set_appearance_mode("light")
+customtkinter.set_default_color_theme("green")
+
 from tkinter import *
 import tkinter as Tk
 from tkinter import ttk
@@ -8,15 +12,24 @@ import re
 from matplotlib.colors import LogNorm
 from matplotlib.font_manager import FontProperties
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
-# import timeit
 import gc
 from tkinter import messagebox
 
 plt.rcParams.update({'figure.max_open_warning': 0})
+plt.rcParams['savefig.dpi'] = 1200
+import os
+
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 def main():
 
-    root = Tk.Tk()
+    root = customtkinter.CTk()
     gui = Window(root)
     def on_closing():
         if messagebox.askokcancel("Quit", "Do you want to quit?"):
@@ -32,48 +45,57 @@ def main():
 class Window:
     def __init__(self,root):
 
+        # s = ttk.Style()
+        # s.configure('Red.TLabelframe.Label', font=('courier', 15, 'bold'))
+
         # ------------------------------------------------------------------------------------------------
         # FRAMES
         self.root = root
-        self.root.title("Blast Estimation. BETA")
-        img = PhotoImage(file="image.png")  # Replace "image.png" with any image file.
+        self.root.title("Blast Viewer. BETA")
+        img = PhotoImage(file=resource_path("image.png"))  # Replace "image.png" with any image file.
         self.root.iconphoto(False, img)
-        # self.root.iconbitmap('blast_viewer.ico')
+        # self.root.iconbitmap(r'C:\Users\Matias Rios\Desktop\Codigo_Python\Blast_viewer_modernGUI\favicon.ico')
         self.root.geometry('1450x1000')
-        self.root.resizable(0,0)
+        self.root.resizable(False,False)
 
-        mapsize_frame =LabelFrame(self.root,text="Map boundaries", padx=10,pady=10, width=210, height=100)
-        mapsize_frame.place(x = 40, y = 5)
-        mapsize_frame.grid_propagate(0)
+        mapsize_frame =LabelFrame(self.root,text="Map boundaries", padx=10,pady=10, width=210, height=100, font=("TkDefaultFont", 9, "bold"))
+        # mapsize_frame =customtkinter.CTkFrame(self.root, padx=10,pady=10, width=210, height=100)
+        mapsize_frame.grid(row = 0, column = 2, sticky = W , padx=20, pady=20)
         self.mapsize_frame = mapsize_frame
 
-        blast_frame =LabelFrame(self.root, text="Blast parameters",  padx=10,pady=10, width=210, height=160)
-        blast_frame.place(x = 40, y = 120)
-        blast_frame.grid_propagate(0)
+        blast_frame =LabelFrame(self.root, text="Blast parameters",  padx=10,pady=10, width=210, height=160, font=("TkDefaultFont", 9, "bold"))
+        # blast_frame.place(x = 40, y = 120)
+        # blast_frame.grid_propagate(False)
+        blast_frame.grid(row = 1, column = 2, sticky = W, padx=20, pady=20)
         self.blast_frame = blast_frame
 
-        airblast_frame =LabelFrame(self.root, text="Airblast constants",  padx=10,pady=10, width=210, height=100)
-        airblast_frame.place(x = 40, y = 300)
-        airblast_frame.grid_propagate(0)
+        airblast_frame =LabelFrame(self.root, text="Airblast constants",  padx=10,pady=10, width=210, height=100, font=("TkDefaultFont", 9, "bold"))
+        # airblast_frame.place(x = 40, y = 300)
+        # airblast_frame.grid_propagate(False)
+        airblast_frame.grid(row = 2, column = 2, sticky = W, padx=20, pady=20)
         self.airblast_frame = airblast_frame
 
-        groundvibration_frame =LabelFrame(self.root, text="Ground Vibration constants",  padx=10,pady=10, width=210, height=100)
-        groundvibration_frame.place(x = 40, y = 420)
-        groundvibration_frame.grid_propagate(0)
+        groundvibration_frame =LabelFrame(self.root, text="Ground Vibration constants",  padx=10,pady=10, width=210, height=100, font=("TkDefaultFont", 9, "bold"))
+        # groundvibration_frame.place(x = 40, y = 420)
+        # groundvibration_frame.grid_propagate(False)
+        groundvibration_frame.grid(row = 3, column = 2, sticky = W, padx=20, pady=20)
         self.groundvibration_frame = groundvibration_frame
 
 
-        receiver_frame = LabelFrame(self.root,text="Receiver coordinates",  padx=10,pady=10, width=210, height=100)
-        receiver_frame.place(x = 40, y = 550)
-        receiver_frame.grid_propagate(0)
+        receiver_frame = LabelFrame(self.root,text="Receiver coordinates",  padx=10,pady=10, width=210, height=100, font=("TkDefaultFont", 9, "bold"))
+        # receiver_frame.place(x = 40, y = 550)
+        # receiver_frame.grid_propagate(False)
+        receiver_frame.grid(row = 4, column = 2, sticky = W, padx=20, pady=20)
         self.receiver_frame = receiver_frame
 
-        calculate_frame = LabelFrame(self.root,  padx=10,pady=10)
-        calculate_frame.place(x = 40, y = 670)
+        calculate_frame = customtkinter.CTkFrame(self.root,  padx=10,pady=10)
+        # calculate_frame.place(x = 40, y = 670)
+        calculate_frame.grid(row = 5, column = 2, sticky = W, padx=20, pady=20)
         self.calculate_frame = calculate_frame
 
         airblast_graph_frame =LabelFrame(self.root, text="")
         airblast_graph_frame.place(x = 300, y = 1)
+        # airblast_graph_frame.grid(row = 0, column = 3, padx=1, pady=1)
         self.airblast_graph_frame = airblast_graph_frame
 
         airblast_map_frame =LabelFrame(self.root, text="")
@@ -158,21 +180,21 @@ class Window:
         # ------------------------------------------------------------------------------------------------
         # LABELS AND ENTRYS PARAMETERS
         
-        distance = Label(self.mapsize_frame ,  text = "Map Size (m): ")
+        distance = Label(self.mapsize_frame ,  text = "Map Size (m):    ")
         self.distance_entry = Entry(self.mapsize_frame ,  width = 15)
         self.distance_entry.grid(row=1, column=1)
         distance.grid(row=1, column=0)
         self.distance_entry.insert(0,200)
         self.distance_entry.config(validate="key",validatecommand=(reg_2,'%v','%P'))
 
-        grid_size = Label(self.mapsize_frame ,  text = "Grid Size (m): ")
+        grid_size = Label(self.mapsize_frame ,  text = "Grid Size (m):   ")
         self.grid_size_entry = Entry(self.mapsize_frame ,  width = 15)
         self.grid_size_entry.grid(row=2, column=1)
         grid_size.grid(row=2, column=0)
         self.grid_size_entry.insert(0,20)
         self.grid_size_entry.config(validate="key",validatecommand=(reg_2,'%v','%P'))
 
-        color_level = Label(self.mapsize_frame ,  text = "Color Division: ")
+        color_level = Label(self.mapsize_frame ,  text = "Color Division:     ")
         self.color_level_entry = Entry(self.mapsize_frame ,  width = 15)
         self.color_level_entry.grid(row=3, column=1)
         color_level.grid(row=3, column=0)
@@ -302,22 +324,22 @@ class Window:
         # ------------------------------------------------------------------------------------------------
         # RADIOBUTTONS
         self.var_air = StringVar(value="dBL")
-        c_pascal = Radiobutton(airblast_frame, text="kPa", variable=self.var_air, value = "kPa")
+        c_pascal = customtkinter.CTkRadioButton(airblast_frame, text="kPa", variable=self.var_air, value = "kPa",height=15, width=15)
         c_pascal.grid(row=3, column=0)
-        c_dbl = Radiobutton(airblast_frame, text="dBL", variable=self.var_air, value = "dBL")
+        c_dbl = customtkinter.CTkRadioButton(airblast_frame, text="dBL", variable=self.var_air, value = "dBL",height=15, width=15)
         c_dbl.grid(row=3, column=1)
         self.var_air_ = self.var_air.get()
 
         self.var_ground = StringVar(value="dBV")
-        c_vibration = Radiobutton(groundvibration_frame, text="PPV", variable=self.var_ground, value = "PPV")
+        c_vibration = customtkinter.CTkRadioButton(groundvibration_frame, text="PPV", variable=self.var_ground, value = "PPV",height=15, width=15)
         c_vibration.grid(row=3, column=0)
-        c_dbv = Radiobutton(groundvibration_frame, text="dBV", variable=self.var_ground, value = "dBV")
+        c_dbv = customtkinter.CTkRadioButton(groundvibration_frame, text="dBV", variable=self.var_ground, value = "dBV",height=15, width=15)
         c_dbv.grid(row=3, column=1)
         self.var_ground_ = self.var_ground.get()
 
         # ------------------------------------------------------------------------------------------------
-        # BUTTON AND COMMANDS
-        calculate_button = Button(self.calculate_frame, text = "Calculate",command = self.update_values, width=25,height=2)
+        # BUTTON AND COMMAND
+        calculate_button = customtkinter.CTkButton(self.calculate_frame, text = "Calculate",command = self.update_values, width=180,height=50,border_width=2,text_font='bold')
         calculate_button.grid(row=0, column=0)
        
         # ------------------------------------------------------------------------------------------------
@@ -373,6 +395,8 @@ class Window:
 
         def calculate():
 
+            img = PhotoImage(file=resource_path("image.png"))  # Replace "image.png" with any image file.
+            
             popup = Tk.Toplevel()
             x = self.root.winfo_x()
             y = self.root.winfo_y()
@@ -382,6 +406,8 @@ class Window:
             progress_var = Tk.DoubleVar()
             progress_bar = ttk.Progressbar(popup, variable=progress_var,mode='determinate',length=280)
             progress_bar.pack(side="top",fill=None,expand=True, padx=30, pady=5)
+
+            popup.iconphoto(False, img)
 
             self.distance = int(self.distance_entry.get())
             self.grid_size = int(self.grid_size_entry.get())
@@ -451,15 +477,22 @@ class Window:
             progress_var.set(100)
 
             # print("The time difference is :", timeit.default_timer() - starttime)
-            popup.after(500, popup.destroy)
+            popup.after(100, popup.destroy)
 
             popup2 = Tk.Toplevel()
+            popup2.iconphoto(False, img)
             popup2.geometry("+%d+%d" % (x + 650, y + 450))
             Tk.Label(popup2, text="                   Done!                   ",font=('',12)).pack(side="top", fill=X, pady=25)
             popup2.after(1000, popup2.destroy)
             gc.collect()
+
+        if float(self.distance_entry.get())/float(self.grid_size_entry.get())  >  10000 :
+            
+            if messagebox.askokcancel("WARNING", "The relation Map size/Grid size is too big. This will cause a highly ram usage and time computation causing the program to crash. Do you want to continue?"):
+                
+                calculate()
         
-        if float(self.distance_entry.get())/float(self.grid_size_entry.get())  >  1000 :
+        elif float(self.distance_entry.get())/float(self.grid_size_entry.get())  >  1000 :
             
             if messagebox.askokcancel("Warning", "Small grid size with a big map size results in longer calculation time with high ram usage. Do you want to continue?"):
                 
@@ -647,7 +680,7 @@ class Window:
             levls = np.array([blast_radio_3,blast_radio_2,blast_radio_1])
             cs_1 = noisemap.contour(X,Y,Z,levels = levls,colors='k',linestyles=('-','-.','--'))
 
-            c = noisemap.contourf(X,Y,Z,levels=np.round(np.linspace(80,230,self.color_level),3),cmap=cm.jet)
+            c = noisemap.contourf(X,Y,Z,levels=np.round(np.linspace(80,230,self.color_level+1),3),cmap=cm.jet)
             figure_map_pressure.colorbar(c,ax=noisemap).ax.set_title('dBL')
 
             plt.plot( levls[2],'k--',label=str(np.round(blast_radio_1,0))+' dBL')
@@ -881,8 +914,8 @@ class Window:
             self.figure_map_vibration = figure_map_vibration
             noisemap = figure_map_vibration.add_subplot(111)
 
-            c = noisemap.contourf(X,Y,Z,levels=np.round(np.linspace(60,200,self.color_level),1),cmap=cm.jet)
-
+            c = noisemap.contourf(X,Y,Z,levels=np.round(np.linspace(40,200,self.color_level+1),1),cmap=cm.jet)
+            
             blast_radio_1 = groundvibration_function_dbv(self,self.blast_radio_1)
             blast_radio_2 = groundvibration_function_dbv(self,self.blast_radio_2)
             blast_radio_3 = groundvibration_function_dbv(self,self.blast_radio_3)
@@ -901,7 +934,7 @@ class Window:
             z = (( R/ (self.charge**(1 / 2)) )**self.bsite) * self.kground
             Z= np.array(z).reshape(len(y),len(x))
             
-            levs_1 = [10**n for n in np.arange(np.log10(0.0002), np.log10(20000)+1,9/self.color_level)]
+            levs_1 = [10**n for n in np.arange(np.log10(0.0002), np.log10(20000)+1,9/(self.color_level+1))]
 
             blast_radio_1 = groundvibration_function_ppv(self,self.blast_radio_1)
             blast_radio_2 = groundvibration_function_ppv(self,self.blast_radio_2)
