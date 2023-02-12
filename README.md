@@ -15,7 +15,7 @@ Features:
 * Up to 5 receivers at any x,y coordinates for each receiver
 * Decay Level Curve in logarithmic scale for overpressure in dBL or Pa and ground vibration in dBV or PPV.
 * Receivers levels 
-* Up to 3 blasting radios
+* Up to 3 blasting radius
 * Colored grid/map for overpressure and ground vibration levels
 * Main features of matplotlib plots in each graph and map such save, zoom in/out, etc.
 
