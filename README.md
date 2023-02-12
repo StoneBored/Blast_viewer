@@ -19,7 +19,8 @@ Features:
 * Colored grid/map for overpressure and ground vibration levels
 * Main features of matplotlib plots in each graph and map such save, zoom in/out, etc.
 
-For more info on how to use the app just read the Quick manual.
+For more info on how to use the app just read the [Quick manual](https://github.com/StoneBored/Blast_viewer/blob/main/Blast%20viewer%20BETA_%20Manual_ENGLISH.pdf).
+
 ##
 Blast viewer BETA is a tool whose purpose is to graphically and visually estimate the Overpressure and Ground Vibration values produced by a blast. By using the models and formulas proposed by the Australian standard AS2187-2, compiled from USBM RI8505 and USBM RI8507 respectively.
 The software in a unified version of the algorithm of the thesis "Algoritmo para la generación de mapa grillado de ruido y vibración para explosiones utilizando la norma australiana AS 2187.2". For more information on the theory, references and realization of the algorithm, consult the following link:
