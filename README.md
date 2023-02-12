@@ -9,6 +9,7 @@ Once you run the code or the program you will see the main window of the program
 ![](images/filename%20main_menu.png)
 
 
+
 Single Charge main features:
 * One blast per time at the center of grid/map (0, 0) by default
 * Up to 5 receivers with X and Y coordinates for each receiver
