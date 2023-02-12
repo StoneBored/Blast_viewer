@@ -10,7 +10,7 @@ Once you run the code or the program you will see the main window of the program
 </p>
 <!-- ![](images/main_menu.PNG) -->
 
-Main features:
+Features:
 * One blast per time at any x,y coordinates
 * Up to 5 receivers at any x,y coordinates for each receiver
 * Decay Level Curve in logarithmic scale for overpressure in dBL or Pa and ground vibration in dBV or PPV.
