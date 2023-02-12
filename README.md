@@ -27,5 +27,7 @@ The software in a unified version of the algorithm of the thesis "Algoritmo para
 https://www.researchgate.net/publication/361115853_Algoritmo_para_la_generacion_de_mapa_de_rejilla_de_ruido_y_vibraciones_para_explosiones_using_la_norma_australiana_AS_21872
 
 
+_For further information contact: janorios.matias@gmail.com_
+
 
 
