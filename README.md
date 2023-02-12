@@ -6,6 +6,7 @@ In order to see the code go to the "CODE" folder and you will be able so the see
 
 Once you run the code or the program you will see the main window of the program as follows:
 
+![](images/filename%20main_menu.png)
 
 
 Single Charge main features:
