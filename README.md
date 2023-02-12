@@ -12,12 +12,14 @@ Once you run the code or the program you will see the main window of the program
 
 Main features:
 * One blast per time at any x,y coordinates
-* Up to 5 receivers with X and Y coordinates for each receiver
-* Decay Level Curve for overpressure in dBL or Pa and ground vibration in dBV or PPV.
+* Up to 5 receivers at any x,y coordinates for each receiver
+* Decay Level Curve in logarithmic scale for overpressure in dBL or Pa and ground vibration in dBV or PPV.
 * Receivers levels 
 * Up to 3 blasting radios
 * Colored grid/map for overpressure and ground vibration levels
-* Features of matplotlib in each graph and map such save, zoom in/out, etc.
+* Main features of matplotlib plots in each graph and map such save, zoom in/out, etc.
+
+For more info on how to use the app just read the Quick manual.
 
 
 
