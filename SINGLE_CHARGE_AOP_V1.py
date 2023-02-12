@@ -8,6 +8,8 @@ import re
 from matplotlib.colors import LogNorm
 from matplotlib.font_manager import FontProperties
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
+plt.rcParams['savefig.dpi'] = 1200
+
 
 
 
@@ -18,11 +20,17 @@ def main():
     gui.root.mainloop()
 
     return None
+
 class Window:
+
     def __init__(self,root):
+
         self.root = root
         self.root.title("Overpressure Estimation")
         self.root.geometry('1450x500')
+        # self.root.resizable(width=False, height=False)
+        # self.root.columnconfigure(0, weight=1)
+        # self.root.rowconfigure(0, weight=1)
 
         # FRAMES
 
@@ -30,7 +38,7 @@ class Window:
         parameters_frame.place(x = 40, y = 1)
         self.parameters_frame = parameters_frame
 
-        receiver_frame = LabelFrame(self.root,text="Receiver parameters", padx=20,pady=20)
+        receiver_frame = LabelFrame(self.root,text="Receiver coordinates", padx=20,pady=20)
         receiver_frame.place(x = 40, y = 200)
         self.receiver_frame = receiver_frame
 
@@ -48,12 +56,12 @@ class Window:
 
 
         # INITAL DATA
-        self.charge = 100
-        self.distance = 100
+        self.charge = 5
+        self.distance = 200
         self.kasite = 516
         self.asite = -1.45
 
-        self.receivor1_x = 0
+        self.receivor1_x = 50
         self.receivor1_y = 0
 
         self.receivor2_x = 0
@@ -78,7 +86,7 @@ class Window:
             pattern = re.compile(r'^(\d*\-?\d*\d*\.?\d*)$')
             if pattern.match(inp) is not None:
                 return True
-            elif inp is "":
+            elif inp == "":
                 return True
             else:
                 return False
@@ -88,7 +96,7 @@ class Window:
             pattern = re.compile(r'^(\d*)$')
             if pattern.match(inp) is not None:
                 return True
-            elif inp is "":
+            elif inp == "":
                 return True
             else:
                 return False
@@ -101,7 +109,7 @@ class Window:
         charge = Label(self.parameters_frame ,  text = "Charge Q (Kg)")
         self.charge_entry = Entry(self.parameters_frame ,  width = 15)
         self.charge_entry.grid(row=0, column=1)
-        self.charge_entry.insert(0,100)
+        self.charge_entry.insert(0,5)
         charge.grid(row=0, column=0)
         self.charge_entry.config(validate="key",validatecommand=(reg_1,'%v','%P'))
 
@@ -109,7 +117,7 @@ class Window:
         self.distance_entry = Entry(self.parameters_frame ,  width = 15)
         self.distance_entry.grid(row=1, column=1)
         distance.grid(row=1, column=0)
-        self.distance_entry.insert(0,100)
+        self.distance_entry.insert(0,200)
         self.distance_entry.config(validate="key",validatecommand=(reg_2,'%v','%P'))
 
         kasite = Label(self.parameters_frame ,  text = "Site constant (K)")
@@ -135,7 +143,7 @@ class Window:
         self.receivor1_y_entry = Entry(receiver_frame,  width = 5)
         self.receivor1_x_entry.grid(row=1, column=1)
         self.receivor1_y_entry.grid(row=2, column=1)
-        self.receivor1_x_entry.insert(0, 0)
+        self.receivor1_x_entry.insert(0, 50)
         self.receivor1_y_entry.insert(0, 0)
         self.receivor1_x_entry.config(validate="key",validatecommand=(reg_1,'%v','%P'))
         self.receivor1_y_entry.config(validate="key",validatecommand=(reg_1,'%v','%P'))
@@ -184,7 +192,7 @@ class Window:
         # RADIOBUTTONS AND RESULTS FRAME, IT SHOULD BE TOGETHER
 
         self.var = StringVar(value="dBL")
-        c_pascal = Radiobutton(parameters_frame, text="Pa", variable=self.var, value = "Pa")
+        c_pascal = Radiobutton(parameters_frame, text="kPa", variable=self.var, value = "kPa")
         c_pascal.grid(row=5, column=0)
         c_dbl = Radiobutton(parameters_frame, text="dBL", variable=self.var, value = "dBL")
         c_dbl.grid(row=5, column=1)
@@ -254,6 +262,8 @@ class Window:
 
         self.test_2()
         frame_2=Frame(self.map_frame)
+        # frame_2=Frame(self.map_frame, width=1000)
+        # frame_2.grid(row=0,column=1)
         frame_2.pack()
         self.frame_2=frame_2
         chart_2 = FigureCanvasTkAgg(self.figure2,self.frame_2)
@@ -305,6 +315,7 @@ class Window:
 
         p_coordiantes = [r1, r2, r3, r4, r5]
         dis_rec = []
+
         for rx, ry in p_coordiantes:
 
             dis_rec.append(np.sqrt((((rx-p[0])**2)+((ry-p[1])**2))))
@@ -316,12 +327,12 @@ class Window:
 
         if (self.var1 == "dBL"):
             for i in dis_rec:
-                total_level.append(10 * np.log10((((((i/(self.charge**(1/3)))**self.asite) * self.kasite)/(0.00002))**2)))
+                total_level.append(20 * np.log10((1000*(((i/(self.charge**(1/3)))**self.asite) * self.kasite)/(0.00002))))
             
             total_level = np.array(total_level)
             self.total_level = np.round(total_level,1)
             
-            z1 = [(10 * np.log10((((((i/(self.charge**(1/3)))**self.asite) * self.kasite)/(0.00002))**2))) 
+            z1 = [20 * np.log10((1000*(((i/(self.charge**(1/3)))**self.asite) * self.kasite)/(0.00002)))
                        for i in np.arange(0.1,(self.distance + 1) * np.sqrt(2)) ]
 
             line_1 = [120 for i in np.arange(1,(self.distance + 1) * np.sqrt(2))]
@@ -339,26 +350,26 @@ class Window:
             plt.plot(x1, line_2,'r--',label="125 dbL: Maximum for Human Comfort Level" )
             plt.plot(x1, line_1,'g--',label="120 dbL: Annoying") 
 
-            plt.ylabel('Sound  Pressure Level(dBL)',labelpad=1)
+            plt.ylabel('Pressure Level(dBL)',labelpad=1)
             plt.title('SPL DECAY')
             plt.xscale('log')
             plt.xlim(1,(self.distance + 1) * np.sqrt(2))
             plt.ylim(z1[-1],z1[1]+5)
 
 
-        elif (self.var1 == "Pa"):
+        elif (self.var1 == "kPa"):
             for i in dis_rec:
                 total_level.append(((i/(self.charge**(1/3)))**self.asite) * self.kasite)
             
             total_level = np.array(total_level)
             self.total_level = np.round(total_level,1)
 
-            z1 = [(((i/(self.charge**(1/3)))**self.asite) * self.kasite) 
+            z1 = [(((i/(self.charge**(1/3)))**self.asite) * self.kasite)
                        for i in np.arange(0.1,(self.distance + 1) * np.sqrt(2)) ]
-
-            line_1 = [20 for i in np.arange(1,(self.distance + 1) * np.sqrt(2))]
-            line_2 = [36.5 for i in np.arange(1,(self.distance + 1) * np.sqrt(2))]
-            line_3 = [89.3 for i in np.arange(1,(self.distance + 1) * np.sqrt(2))]
+            # print(z1)
+            line_1 = [20/1000 for i in np.arange(1,(self.distance + 1) * np.sqrt(2))]
+            line_2 = [36.5/1000 for i in np.arange(1,(self.distance + 1) * np.sqrt(2))]
+            line_3 = [89.3/1000 for i in np.arange(1,(self.distance + 1) * np.sqrt(2))]
             x1 = np.arange(1,(self.distance + 1) * np.sqrt(2))  
 
             figure1 = plt.figure(figsize = (5,4), dpi = 110)
@@ -366,17 +377,34 @@ class Window:
             self.figure1=figure1
 
             plt.plot(z1,label="Decay Curve")
-            plt.plot(x1, line_3,'b--',label="89.3 Pa: Maximum for Structural Damage Level" )
-            plt.plot(x1, line_2,'r--',label="36.5 Pa: Maximum for Human Comfort Level" )
-            plt.plot(x1, line_1,'g--',label="89.3 Pa: Annoying")
+            plt.plot(x1, line_3,'b--',label="89.3 kPa: Maximum for Structural Damage Level" )
+            plt.plot(x1, line_2,'r--',label="36.5 kPa: Maximum for Human Comfort Level" )
+            plt.plot(x1, line_1,'g--',label="20 kPa: Annoying")
 
-            plt.ylabel('Sound  Pressure (Pa)',labelpad=1)
-            plt.title('Pa DECAY')
+            plt.ylabel('Pressure (kPa)',labelpad=1)
+            plt.title('kPa DECAY')
             plt.xscale('log')
             plt.yscale('log')
             plt.xlim(1,(self.distance + 1) * np.sqrt(2))
             plt.ylim(z1[-1],z1[1]+5 ) 
 
+
+        # plt.scatter(r[0], total_level[0])
+        # plt.scatter(r[1], total_level[1])
+        # plt.scatter(r[2], total_level[2])
+        # plt.scatter(r[3], total_level[3])
+        # plt.scatter(r[4], total_level[4])
+        # fontP = FontProperties()
+        # fontP.set_size('x-small')
+        # plt.xlabel('Distance (m)')
+        # plt.legend(loc='upper right', prop=fontP)
+        # plt.tick_params(axis='x', labelsize=8)
+        # plt.tick_params(axis='y', labelsize=8)
+        # plt.grid(True, which="both", ls="-")
+        annotations=["R1","R2","R3","R4","R5"]
+    
+        for i, label in enumerate(annotations):
+            plt.annotate(label, (r[i], total_level[i]))
 
         plt.scatter(r[0], total_level[0])
         plt.scatter(r[1], total_level[1])
@@ -397,15 +425,15 @@ class Window:
         # MAXIMUM LEVELS
         theta = np.linspace(0, 2*np.pi, 100)
     
-        r_1 = (self.charge**(1/3)) * (20/self.kasite)**(1/self.asite)
+        r_1 = (self.charge**(1/3)) * ((2000/self.kasite)**(1/self.asite))
         xr_1 = r_1*np.cos(theta)
         yr_1 = r_1*np.sin(theta)
 
-        r_2 = (self.charge**(1/3)) * (35.57/self.kasite)**(1/self.asite)
+        r_2 = (self.charge**(1/3)) * (3557/self.kasite)**(1/self.asite)
         xr_2 = r_2*np.cos(theta)
         yr_2 = r_2*np.sin(theta)
 
-        r_3 = (self.charge**(1/3)) * (89.34/self.kasite)**(1/self.asite)
+        r_3 = (self.charge**(1/3)) * (8934/self.kasite)**(1/self.asite)
         xr_3 = r_3*np.cos(theta)
         yr_3 = r_3*np.sin(theta)
 
@@ -417,9 +445,11 @@ class Window:
 
         # GRAPH
 
-        z1 = [np.round(10 * np.log10((((((i/(self.charge**(1/3)))**self.asite) * self.kasite)/(0.00002))**2)),0) 
+        # z1 = [np.round(10 * np.log10(1000*(((((i/(self.charge**(1/3)))**self.asite) * self.kasite)/(0.00002))**2)),0) 
+        #                for i in np.arange(1,(self.distance + 1) * np.sqrt(2)) ]
+        z1 = [np.round(20 * np.log10((1000*(((i/(self.charge**(1/3)))**self.asite) * self.kasite)/(0.00002))),0) 
                        for i in np.arange(1,(self.distance + 1) * np.sqrt(2)) ]
-
+        
         N = self.distance
         x = np.linspace(-N, N, 2000)
         y = np.linspace(-N, N, 2000)
@@ -435,21 +465,33 @@ class Window:
         if (self.var1 == "dBL"):
         # EQUATION
     
-            z = 10 * np.log10((((((R/(self.charge**(1/3)))**self.asite) * self.kasite)/(0.00002))**2))
+            # z = 10 * np.log10(1000*(((((R/(self.charge**(1/3)))**self.asite) * self.kasite)/(0.00002))**2))
+            z = 20 * np.log10((1000*(((R/(self.charge**(1/3)))**self.asite) * self.kasite)/(0.00002)))
             Z= np.array(z).reshape(len(y),len(x))
             figure2 = plt.figure(figsize = (5,4), dpi = 110)
             self.figure2 = figure2
             noisemap = figure2.add_subplot(111)
-            c = noisemap.contourf(X,Y,Z,levels=np.round(np.linspace(z1[-1],z1[0],25),1),cmap=cm.jet)
-            figure2.colorbar(c,ax=noisemap).ax.set_title('dBL')
-            plt.plot(xr_3 , yr_3 , 'k--',label="130 dbL")
-            plt.plot(xr_2 , yr_2 , 'k-.',label="125 dbL")
-            plt.plot(xr_1 , yr_1 , 'k-',label="120 dbL")
 
-        elif (self.var1 == "Pa"):
+            levls = np.array([120,125,133])
+            cs_1 = noisemap.contour(X,Y,Z,levels = levls,colors='k',linestyles=('-','-.','--'))
+
+            c = noisemap.contourf(X,Y,Z,levels=np.round(np.linspace(z1[-1],z1[0],25),3),cmap=cm.jet)
+            # c = noisemap.contourf(X,Y,Z,cmap=cm.jet)
+            figure2.colorbar(c,ax=noisemap).ax.set_title('dBL')
+
+            levls = np.array([120,125,133])
+            cs_1 = noisemap.contour(X,Y,Z,levels = levls,colors='k',linestyles=('-','-.','--'))
+            plt.plot(levls[0],'k-',label="120 dBL")
+            plt.plot( levls[1],'k-.',label="125 dBL")
+            plt.plot( levls[2],'k--',label="133 dBL")
+            
+
+        elif (self.var1 == "kPa"):
+
             z = (( R/ (self.charge**(1 / 3)) )**self.asite) * self.kasite
             Z= np.array(z).reshape(len(y),len(x))
             z_pascal = [(( i / (self.charge**(1 / 3)) )**self.asite) * 516 for i in np.arange(0.5,(N +1)*np.sqrt(2)) ]
+
             florr = np.log10(z_pascal[-1])
             florr_1 = np.floor(florr)
             florr2 = np.log10(z_pascal[0])
@@ -461,14 +503,37 @@ class Window:
             levs_4 = [8*10**n for n in np.arange(florr_1 , florr_2-1)]
             levs_5 = sorted(levs_1 + levs_2 + levs_3 + levs_4)
 
+            # florr = np.log10(z.min())
+            # florr_1 = np.floor(florr)
+            # florr2 = np.log10(z.max())
+            # florr_2 = np.ceil(florr2)
+            # rango = np.arange(florr_1 , florr_2)
+            # levs_1 = [10**n for n in np.arange(florr_1, florr_2)]
+            # levs_2 = [2*10**n for n in np.arange(florr_1 , florr_2)]
+            # levs_3 = [3*10**n for n in np.arange(florr_1 , florr_2)]
+            # levs_4 = [5*10**n for n in np.arange(florr_1 , florr_2)]
+            # levs_5 = [8*10**n for n in np.arange(florr_1 , florr_2-1)]
+
+            # levs_total = sorted(levs_1 + levs_2 + levs_3 + levs_4 + levs_5)
+            # lvl = levs_total
+
+
+
+            levls = np.array([20/1000,35/1000,89/1000])
             figure2 = plt.figure(figsize = (5,4), dpi = 110)
             self.figure2 = figure2
             noisemap = figure2.add_subplot(111)
             c = noisemap.contourf(X,Y,Z,levels=levs_5,norm=LogNorm(),cmap=cm.jet)
-            figure2.colorbar(c,ax=noisemap,ticks=[1, 10, 100, 1000, 10000]).ax.set_title('Pa')
-            plt.plot(xr_3 , yr_3 , 'k--',label="89 Pa")
-            plt.plot(xr_2 , yr_2 , 'k-.',label="355 Pa")
-            plt.plot(xr_1 , yr_1 , 'k-',label="20 Pa")
+            
+            cs_1 = noisemap.contour(X,Y,Z,levels = levls,colors='k',linestyles=('-','-.','--'))
+            figure2.colorbar(c,ax=noisemap,ticks=[1, 10, 100, 1000, 10000]).ax.set_title('kPa')
+            
+            # plt.plot(xr_3 , yr_3 , 'k--',label="89 kPa")
+            # plt.plot(xr_2 , yr_2 , 'k-.',label="35 kPa")
+            # plt.plot(xr_1 , yr_1 , 'k-',label="20 k55Pa")
+            plt.plot(levls[0],'k-',label="20 Pa")
+            plt.plot( levls[1],'k-.',label="35 Pa")
+            plt.plot( levls[2],'k--',label="89 Pa")
             
   
         plt.xlabel('Distance (m)')
@@ -543,11 +608,12 @@ class Window:
         r = np.array(dis_rec)
         self.r = np.round(r,1)
         total_level = [] 
+
         if (self.var1 == "dBL"):
             for i in dis_rec:
-                total_level.append(10 * np.log10((((((i/(self.charge**(1/3)))**self.asite) * self.kasite)/(0.00002))**2)))
+                total_level.append(20 * np.log10((1000*(((i/(self.charge**(1/3)))**self.asite) * self.kasite)/(0.00002))))
 
-        elif (self.var1 == "Pa"):
+        elif (self.var1 == "kPa"):
             for i in dis_rec:
                 total_level.append(((i/(self.charge**(1/3)))**self.asite) * self.kasite)
 
